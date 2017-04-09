@@ -16,9 +16,76 @@
 
 package noaf;
 
-public class CmdNoaf extends CmdBase {
+import java.io.FileNotFoundException;
+import javax.script.ScriptException;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.ParseException;
+
+public class CmdNoaf extends CmdBase {	
+	/**
+	 * Process options 
+	 * 
+	 * @param cmd The command line processed.
+	 * @return true if help should be shown
+	 */
+	protected static boolean processOptions(CommandLine cmd) {
+		boolean displayHelp = true;
+		
+		// non final options
+		// -----------------
+		
+		if (cmd.hasOption("e")) {
+			displayHelp = false;
+			envString = cmd.getOptionValue("e");
+		}
+		
+		// final options
+		// -------------
+		
+		if (cmd.hasOption("f")) {
+			displayHelp = false;
+			try {
+				noAF.execScript(cmd.getOptionValue("f"));
+				return false;
+			} catch (FileNotFoundException e) {
+				System.err.println("Can't open: " + e.getMessage());
+			} catch (ScriptException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		if (cmd.hasOption("s")) {
+			try {
+				noAF.exec(envString);
+				return false;
+			} catch (ScriptException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		return displayHelp;
+	}
+	
 	public static void main(String args[]) {
 		cmd = "CmdNoaf";
+		boolean displayHelp = true;
+		
+		CommandLineParser parser = new DefaultParser();
+		CommandLine cmdL = null;
+		try {
+			cmdL = parser.parse(getOptions(), args);
+		} catch (ParseException e) {
+			System.err.println("Can't parse the command line: " + e.getMessage());
+			showHelp("noaf");
+			System.exit(0);
+		}
+		
+		displayHelp = processOptions(cmdL);
+		
+		if (displayHelp) showHelp("noaf");
 	}
 }
 
