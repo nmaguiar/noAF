@@ -19,6 +19,12 @@ OW.test = function() {
 	return ow.test;
 }
 
+/**
+ * <odoc>
+ * <key>ow.test.resetCounters()</key>
+ * Resets the internal counters for the current test.
+ * </odoc>
+ */
 OW.test.prototype.resetCounters = function() {
  	this.__countTotal = 0;
   	this.__countPass  = 0;
@@ -26,11 +32,36 @@ OW.test.prototype.resetCounters = function() {
 }
 
 OW.test.prototype.reset = function() { return this.resetCounters(); } 
+/**
+ * <odoc>
+ * <key>ow.test.getCountTotal() : Number</key>
+ * Obtains the current total count of tests performed.
+ * </odoc>
+ */
 OW.test.prototype.getCountTotal = function() { return this.__countTotal; };
 OW.test.prototype.getCountTest  = function() { return this.__countTest;  };
+/**
+ * <odoc>
+ * <key>ow.test.getCountPass() : Number</key>
+ * Obtains the current total count of tests performed that passed successfully.
+ * </odoc>
+ */
 OW.test.prototype.getCountPass  = function() { return this.__countPass;  };
+/**
+ * <odoc>
+ * <key>ow.test.getCountFail() : Number</key>
+ * Obtains the current total count of tests performed that failed.
+ * </odoc>
+ */
 OW.test.prototype.getCountFail  = function() { return this.__countFail;  };
 
+/**
+ * <odoc>
+ * <key>ow.test.test(aTestName, aFunction) : Object</key>
+ * Tries to execute aFunction under aTestName. If successfully it will return the function result.
+ * The internal test counters will be updated accordingly. 
+ * </odoc>
+ */
 OW.test.prototype.test = function(aTestName, aFunction) {
 	try {
 		this.__countTotal++;
