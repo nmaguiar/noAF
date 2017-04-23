@@ -1,1 +1,2 @@
+cd /Users/nuno/Documents/workspace/noaf
 java -cp lib/commons-cli-1.4.jar:bin/ noaf.CmdNoaf $@
