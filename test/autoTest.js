@@ -32,8 +32,18 @@ ow.test.test("Stringify", function() {
   sprint(a);
 });
 
+ow.test.test("ZIP: reading and writing", function() {
+  var z = new ZIP();
+  z.loadFile("lib/commons-io-2.5.jar");
+  print(Object.keys(z.list()).length);
+  z.streamPutFile("test/autoTest.zip", "a.txt", z.getFile("META-INF/maven/commons-io/commons-io/pom.properties"));
+});
+
 log("Tests passed: " + ow.test.getCountPass());
 log("Tests failed: " + ow.test.getCountFail());
 log("Total       : " + ow.test.getCountTotal());
 
 log("Done");
+
+
+

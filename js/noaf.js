@@ -134,6 +134,8 @@ function logWarn(aMessage) {
 
 // Load libs
 // ---------
+load("js/zip.js");
+
 var OW;
 if (isUnDef(OW)) OW = function() {};
 
