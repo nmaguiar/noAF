@@ -14,16 +14,35 @@
  *  limitations under the License.
  */
 
+/**
+ * <odoc>
+ * <key>ZIP.ZIP(anArrayOfBytes) : ZIP</key>
+ * Creates a ZIP object instance. If anArrayOfBytes is provided it will read it as a ZIP compressed contents into
+ * the ZIP object.
+ * </odoc>
+ */
 var ZIP = function(aData) {
 	this.clean();
 	if (isDef(aData)) load(aData);
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.clean()</key>
+ * Will clean all internal data regarding any previously ZIP contents handled by this object.
+ * </odoc>
+ */
 ZIP.prototype.clean = function() {
 	this.__zipData = new java.util.concurrent.ConcurrentHashMap();
 	this.__zipEntries = new java.util.concurrent.ConcurrentHashMap();
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.load(anArrayOfBytes)</key>
+ * Loads anArrayOfBytes ZIP contents into the internal object structures.
+ * </odoc>
+ */
 ZIP.prototype.load = function(aData) {
 	this.clean();
 	
@@ -39,11 +58,23 @@ ZIP.prototype.load = function(aData) {
 	return this;
 } 
 
+/**
+ * <odoc>
+ * <key>ZIP.close()</key>
+ * Will close the ZIP file associated with this object.
+ * </odoc>
+ */
 ZIP.prototype.close = function() {
 	this.clean();
 	if (isDef(this.__zipFile)) this.__zipFile.close();
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.getFile(aFilename) : anArrayOfBytes</key>
+ * Will uncompress the corresponding aFilename from the ZIP contents into an arrays of bytes.
+ * </odoc>
+ */
 ZIP.prototype.getFile = function(aName) {
 	if (this.__zipData.containsKey(aName)) {
 		return this.__zipData.get(aName);
@@ -52,6 +83,12 @@ ZIP.prototype.getFile = function(aName) {
 	}
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.putFile(aFilename, anArrayOfBytes)</key>
+ * Will add anArrayOfBytes to the ZIP contents as aFilename.
+ * </odoc>
+ */
 ZIP.prototype.putFile = function(aName, aData) {
 	var bytes;
 
@@ -66,6 +103,12 @@ ZIP.prototype.putFile = function(aName, aData) {
 	this.__zipData.put(aName, bytes);
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.remove(aFilename)</key>
+ * Will remove aFilename from the ZIP contents.
+ * </odoc>
+ */
 ZIP.prototype.remove = function(aName) {
 	this.__zipEntries.remove(aName);
 	this.__zipData.remove(aName);
@@ -73,6 +116,13 @@ ZIP.prototype.remove = function(aName) {
 	return this;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.streamGetFile(aFilePath, aName) : anArrayOfBytes</key>
+ * Retrieves aName file from aFilePath zip file without loading the zip file contents into memory returning the 
+ * file contents as an array of bytes.
+ * </odoc>
+ */
 ZIP.prototype.streamGetFile = function(aFilePath, aName) {
 	var ne;
 	var zis = new java.util.zip.ZipInputStream(new java.io.FileInputStream(aFilePath));
@@ -101,6 +151,13 @@ ZIP.prototype.streamGetFile = function(aFilePath, aName) {
 	return null;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.streamGetFileStream(aFilePath, aName) : JavaInputStream</key>
+ * Retrieves aName file from aFilePath zip file without loading the zip file contents into memory returning a 
+ * Java InputStream.
+ * </odoc>
+ */
 ZIP.prototype.streamGetFileStream = function(aFilePath, aName) {
 	var ne;
 	var zis = new java.util.zip.ZipInputStream(new java.io.FileInputStream(aFilePath));
@@ -126,6 +183,13 @@ ZIP.prototype.streamGetFileStream = function(aFilePath, aName) {
 	return null;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.streamPutFile(aFilePath, aName, anArrayOfBytes)</key>
+ * Sets a aName file on the aFilePath ZIP provided with the anArrayOfBytes provided. All missing directories
+ * will be created.
+ * </odoc>
+ */
 ZIP.prototype.streamPutFile = function(aFilePath, aName, aData) {
 	var path = java.nio.file.Paths.get(aFilePath);
 	var uri = java.net.URI.create("jar:" + path.toUri());
@@ -162,6 +226,12 @@ ZIP.prototype.streamPutFile = function(aFilePath, aName, aData) {
 	}
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.load(anArrayOfBytes)</key>
+ * Loads anArrayOfBytes ZIP contents into the internal object structures.
+ * </odoc>
+ */
 ZIP.prototype.load = function(aData) {
 	this.clean();
 
@@ -177,6 +247,12 @@ ZIP.prototype.load = function(aData) {
 	return this;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.loadFile(aFilename)</key>
+ * Will load a ZIP file aFilename into the ZIP object internal structure.
+ * </odoc>
+ */
 ZIP.prototype.loadFile = function(aFilename) {
 	this.clean();
 
@@ -192,6 +268,13 @@ ZIP.prototype.loadFile = function(aFilename) {
 	return this;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.list() : Map</key>
+ * Will list all files and folders of the loaded ZIP contents into a Map with name, size, compressedSize, comment,
+ * crc and time.
+ * </odoc>
+ */
 ZIP.prototype.list = function(aFilePath) {
 	var names = {};
 	var zes = new java.util.HashMap();
@@ -222,6 +305,25 @@ ZIP.prototype.list = function(aFilePath) {
 	return names;
 }
 
+/**
+ * <odoc>
+ * <key>ZIP.generate(aMapOfOptions, dontReload) : anArrayOfBytes</key>
+ * Will generate a ZIP anArrayOfBytes contents (that can then by saved into a file) given the provided options (a map
+ * where you can specify the compressionLevel as a number). If dontReload = true then the internal ZIP object contents
+ * won't be reloaded after generating. Example:\
+ * \
+ * plugin("ZIP");\
+ * var zip = new ZIP();\
+ * var text = new java.lang.String("Some example test to zip into a zip file");\
+ * var openaf = io.readFileBytes("c:\\apps\\OpenAF\\openaf.jar");\
+ * zip.putFile("text.txt", text.getBytes());\
+ * zip.putFile("openaf.jar", openaf);\
+ * var newZip = zip.generate({"compressionLevel": 9});\
+ * var zip = new ZIP(newZip);\
+ * print(beautifier(zip.list()));\
+ * \
+ * </odoc>
+ */
 ZIP.prototype.generate = function(options, dontReload) {
 	var baos = java.io.ByteArrayOutputStream();
 	var zos = java.util.zip.ZipOutputStream(baos);
