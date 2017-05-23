@@ -55,6 +55,12 @@ OW.test.prototype.getCountPass  = function() { return this.__countPass;  };
  */
 OW.test.prototype.getCountFail  = function() { return this.__countFail;  };
 
+OW.test.prototype.assert = function(aResult, aCheckValue, aErrorMessage, dontShowDiff) {
+	if (!compare(aResult, aCheckValue)) {
+		throw aErrorMessage + ((dontShowDiff) ? "" : " (result " + stringify(aResult) + " but expected " + stringify(aCheckValue) + ")");
+	}
+};
+
 /**
  * <odoc>
  * <key>ow.test.test(aTestName, aFunction) : Object</key>

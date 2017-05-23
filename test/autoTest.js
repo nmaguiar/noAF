@@ -39,6 +39,12 @@ ow.test.test("ZIP: reading and writing", function() {
   z.streamPutFile("test/autoTest.zip", "a.txt", z.getFile("META-INF/maven/commons-io/commons-io/pom.properties"));
 });
 
+ow.test.test("IO: test file enconding", function() {
+  ow.test.assert(io.getDefaultEncoding(), "UTF-8", "Default encoding not expected.");
+  io.convertFileToEncoding("noaf", "test/noaf.UTF16", "UTF-16");
+  ow.test.assert(io.getFileEncoding("test/noaf.UTF16").substr(0, 6), "UTF-16", "Encoding not expected.");  
+});
+
 log("Tests passed: " + ow.test.getCountPass());
 log("Tests failed: " + ow.test.getCountFail());
 log("Total       : " + ow.test.getCountTotal());
