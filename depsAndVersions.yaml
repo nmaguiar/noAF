@@ -3,3 +3,10 @@ versions:
      version: 1.4
      license: http://www.apache.org/licenses/LICENSE-2.0
      changed: false
+   - name   : Apache Commons IO
+     version: 2.5
+     license: http://www.apache.org/licenses/LICENSE-2.0
+     changed: false
+   - name   : juniversalchardet
+     version: 1.0.3
+     license: Mozilla Public License Version 1.1
