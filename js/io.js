@@ -65,3 +65,57 @@ IO.prototype.convertFileToEncoding = function(aOrigFile, aNewFile, aEncoding) {
         var fe = io.getFileEncoding(aOrigFile);
 	FileUtils.writeStringToFile(new java.io.File(aNewFile), FileUtils.readFileToString(new java.io.File(aOrigFile), ((fe == null) ? io.getDefaultEncoding() : fe)), aEncoding);
 }
+
+IO.prototype.listFiles = function(aFilepath, usePosix) {
+	var f = new java.io.File(aFilepath);
+ 
+ 	if (f != null) {
+		var files = f.listFiles();
+		if (files != null) {
+			var filesMap = [];
+			for(var file in files) {
+				if (file != null) {
+					var attr;
+					if (usePosix) {
+						try {
+							attr = java.nio.file.Files.readAttributes(files[file].toPath(), java.nio.file.attribute.PosixFileAttributes.class, java.nio.file.LinkOption.NOFOLLOW_LINKS);
+						} catch(e) {
+							usePosix = false;
+							attr = java.nio.file.Files.readAttributes(files[file].toPath(), java.nio.file.attribute.BasicFileAttributes.class, java.nio.file.LinkOption.NOFOLLOW_LINKS);
+						}
+					} else { 
+						attr = java.nio.file.Files.readAttributes(files[file].toPath(), java.nio.file.attribute.BasicFileAttributes.class, java.nio.file.LinkOption.NOFOLLOW_LINKS);
+					}
+			
+           				var sb = "";
+					if (files[file].canExecute()) sb += "x";
+					if (files[file].canRead())    sb += "r";
+ 					if (files[file].canWrite())   sb += "w";
+	
+					var fileMap = {
+						isDirectory : files[file].isDirectory(),
+						isFile      : files[file].isFile(),
+						filename    : files[file].getName(),
+						filepath    : files[file].getPath(),
+						lastModified: files[file].lastModified(),
+						createTime  : attr.creationTime().toMillis(),
+						lastAccess  : attr.lastAccessTime().toMillis(),
+						size        : files[file].length(),
+						permissions : sb
+					};
+
+					if (usePosix) {
+						fileMap.group = attr.group().getName();
+						fileMap.user  = attr.owner().getName();
+						fileMap.posixPermissions = java.nio.file.attribute.PosixFilePermissions.toString(attr.permissions());
+					}
+				
+					filesMap.push(fileMap);
+				}
+			}
+			return { files : filesMap };
+		}
+	}
+					
+					
+}
