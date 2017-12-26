@@ -1,0 +1,42 @@
+jobs:
+   # Initialize variables
+   - name: Init
+     exec: |
+        global.path = (isDef(args.path)) ? args.path : ".";
+        global.lib  = global.path + "/lib";
+        global.src  = global.path + "/src";
+        global.js   = global.path + "/js";
+        global.bin  = global.path + "/bin";
+        global.os   = String(java.lang.System.getProperty("os.name"));
+        global.sep  = (global.os.match(/Windows/)) ? ";" : ":";
+
+        log("Loading auxiliary functions...");
+        loadLib(global.path + "/build.js");
+
+   # Build the classpath string
+   - name: Build classpath
+     deps:
+       - Init
+     exec: >
+       var tmp = buildClasspath(args);
+       global.classpath = tmp.classpath;
+       global.smallclasspath = tmp.smallclasspath;
+
+   # Build the Java source
+   - name: Build Java
+     deps:
+       - Build classpath
+     exec: >
+       var srcs = buildSource(args);
+       io.mkdir(global.bin);
+       log("Compiling...");
+       sh("javac -cp " + global.classpath + " -d " + global.bin + " " + srcs, undefined, undefined, true);
+       if (__exitcode != 0) {
+         logErr("Error compiling: " + __stderr);
+       }
+        
+todo:
+   - Init
+   - Build classpath
+   - Build Java
+   

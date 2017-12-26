@@ -15,7 +15,7 @@
  */
 
 var IO = function() {
-}
+};
 
 /**
  * <odoc>
@@ -41,7 +41,7 @@ IO.prototype.getFileEncoding = function(aFile) {
 	fis.close();
 	
 	return encoding;
-}
+};
 
 /**
  * <odoc>
@@ -51,7 +51,7 @@ IO.prototype.getFileEncoding = function(aFile) {
  */
 IO.prototype.getDefaultEncoding = function() {
 	return java.lang.System.getProperty("file.encoding");
-}
+};
 
 /**
  * <odoc>
@@ -64,7 +64,7 @@ IO.prototype.convertFileToEncoding = function(aOrigFile, aNewFile, aEncoding) {
 	var FileUtils = Java.type("org.apache.commons.io.FileUtils");
         var fe = io.getFileEncoding(aOrigFile);
 	FileUtils.writeStringToFile(new java.io.File(aNewFile), FileUtils.readFileToString(new java.io.File(aOrigFile), ((fe == null) ? io.getDefaultEncoding() : fe)), aEncoding);
-}
+};
 
 IO.prototype.listFiles = function(aFilepath, usePosix) {
 	var f = new java.io.File(aFilepath);
@@ -115,7 +115,85 @@ IO.prototype.listFiles = function(aFilepath, usePosix) {
 			}
 			return { files : filesMap };
 		}
-	}
-					
-					
-}
+	}					
+};
+
+IO.prototype.fileExists = function(aFile) {
+	// TODO
+};
+
+IO.prototype.fileInfo = function(aFilepath) {
+	// TODO
+};
+
+IO.prototype.listFilenames = function(aFilepath, isFullPath) {
+	// TODO
+};
+
+IO.prototype.readFileAsArray = function(aFilename, aEncoding) {
+	// TODO
+};
+
+IO.prototype.readFileString = function(aFilename, aEncoding) {
+	// TODO
+};
+
+IO.prototype.readFileXML = function(aFilename, skipLines, aEncoding) {
+	// TODO
+};
+
+IO.prototype.readFileBytes = function(aFilename) {
+	// TODO
+};
+
+IO.prototype.writeFile = function(aFilename, pmIn, aEncoding, shouldAppend) {
+	// TODO
+};
+
+IO.prototype.writeFileString = function(aFilename, pmIn, aEncoding, shouldAppend) {
+	// TODO
+};
+
+IO.prototype.writeFileXML = function(aFilename, xml, aEncoding, shouldAppend) {
+	// TODO
+};
+
+IO.prototype.writeFileBytes = function(aFilename, pmIn) {
+	// TODO
+};
+
+IO.prototype.writeFileAsArray = function(aFilename, lines, aEncoding) {
+	// TODO
+};
+
+IO.prototype.readFile = function(aFilename, aEncoding) {
+	// TODO
+};
+
+IO.prototype.gzip = function(dataIn) {
+	// TODO
+};
+
+IO.prototype.gunzip = function(dataIn) {
+	// TODO
+};
+
+IO.prototype.randomAccessFile = function(aFilename, aMode) {
+	// TODO
+};
+
+IO.prototype.writeFileGzipStream = function(aFilename) {
+	// TODO
+};
+
+IO.prototype.readFileGzipStream = function(aFilename) {
+	// TODO
+};
+
+IO.prototype.readFileStream = function(aFilename) {
+	// TODO
+};
+
+IO.prototype.writeFileStream = function(aFilename) {
+	// TODO
+};

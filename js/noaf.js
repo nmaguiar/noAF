@@ -176,5 +176,5 @@ if (isUnDef(ow)) { ow = new OW(); }
  * Loads the ow.test library.
  * </odoc>
  */
-OW.prototype.loadTest = function() { loadLib("js/ow/ow.test.js"); ow.test = new OW.test(); return ow.test; }
+OW.prototype.loadTest = function() { loadLib("js/ow/ow.test.js"); ow.test = new OW.test(); return ow.test; };
 

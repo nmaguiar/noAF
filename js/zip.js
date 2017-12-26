@@ -24,7 +24,7 @@
 var ZIP = function(aData) {
 	this.clean();
 	if (isDef(aData)) load(aData);
-}
+};
 
 /**
  * <odoc>
@@ -35,7 +35,7 @@ var ZIP = function(aData) {
 ZIP.prototype.clean = function() {
 	this.__zipData = new java.util.concurrent.ConcurrentHashMap();
 	this.__zipEntries = new java.util.concurrent.ConcurrentHashMap();
-}
+};
 
 /**
  * <odoc>
@@ -56,7 +56,7 @@ ZIP.prototype.load = function(aData) {
 	}
 	
 	return this;
-} 
+};
 
 /**
  * <odoc>
@@ -67,7 +67,7 @@ ZIP.prototype.load = function(aData) {
 ZIP.prototype.close = function() {
 	this.clean();
 	if (isDef(this.__zipFile)) this.__zipFile.close();
-}
+};
 
 /**
  * <odoc>
@@ -81,7 +81,7 @@ ZIP.prototype.getFile = function(aName) {
 	} else {
 		return org.apache.commons.io.IOUtils.toByteArray(this.__zipFile.getInputStream(this.__zipEntries.get(aName)));
 	}
-}
+};
 
 /**
  * <odoc>
@@ -101,7 +101,7 @@ ZIP.prototype.putFile = function(aName, aData) {
 	var e = new java.util.zip.ZipEntry(aName);
 	this.__zipEntries.put(aName, e);
 	this.__zipData.put(aName, bytes);
-}
+};
 
 /**
  * <odoc>
@@ -114,7 +114,7 @@ ZIP.prototype.remove = function(aName) {
 	this.__zipData.remove(aName);
 	
 	return this;
-}
+};
 
 /**
  * <odoc>
@@ -149,7 +149,7 @@ ZIP.prototype.streamGetFile = function(aFilePath, aName) {
 	}
 	
 	return null;
-}
+};
 
 /**
  * <odoc>
@@ -181,7 +181,7 @@ ZIP.prototype.streamGetFileStream = function(aFilePath, aName) {
 	}
 	
 	return null;
-}
+};
 
 /**
  * <odoc>
@@ -224,7 +224,7 @@ ZIP.prototype.streamPutFile = function(aFilePath, aName, aData) {
 	} catch(e) {
 		throw e;
 	}
-}
+};
 
 /**
  * <odoc>
@@ -245,7 +245,7 @@ ZIP.prototype.load = function(aData) {
 	}
 	
 	return this;
-}
+};
 
 /**
  * <odoc>
@@ -266,7 +266,7 @@ ZIP.prototype.loadFile = function(aFilename) {
 	}
 	
 	return this;
-}
+};
 
 /**
  * <odoc>
@@ -303,7 +303,7 @@ ZIP.prototype.list = function(aFilePath) {
 	}
 	
 	return names;
-}
+};
 
 /**
  * <odoc>
@@ -355,4 +355,4 @@ ZIP.prototype.generate = function(options, dontReload) {
 	if (!dontReload) this.load(baos.toByteArray());
 	
 	return baos.toByteArray();
-}
+};
